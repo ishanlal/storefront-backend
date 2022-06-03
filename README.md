@@ -43,21 +43,33 @@ This application makes use of the following libraries:
 
 In this repo there is a `REQUIREMENTS.md` document which outlines what the API supplies for the frontend, as well as the agreed upon data shapes to be passed between frontend and backend. This `README.md` is API documentation.
 
-First we read the `REQUIREMENTS.md` and updated the document with the following:
+Updated `REQUIREMENTS.md` with the following:
 - Determined the RESTful route for each endpoint listed. Added the RESTful route and corresponding HTTP verb to the document so that the frontend developer can begin to build their fetch requests.
-**Example**: A SHOW route: 'blogs/:id' [GET]
+**Example**:
+`A SHOW route: 'blogs/:id' [GET]`
 
 - Designed the Postgres database tables based off the data shape requirements. Added to the requirements document the database tables and columns with foreign keys if any.
 **Example**:
-Table: Books (id:varchar, title:varchar, author:varchar, published_year:varchar, publisher_id:string[foreign key to publishers table], pages:number)
+`CREATE TABLE products (
+    id SERIAL PRIMARY KEY, [foreign key to order_products table]
+    name VARCHAR(64) NOT NULL,
+    price integer NOT NULL,
+    category VARCHAR(64) NOT NULL
+);`
 
 **NOTE** It is important to remember that there might not be a one to one ratio between data shapes and database tables. Data shapes only outline the structure of objects being passed between frontend and API, the database may need multiple tables to store a single shape.
 
 ### 2.  DB Creation and Migrations
 
-Now that you have the structure of the databse outlined, it is time to create the database and migrations. Add the npm packages dotenv and db-migrate that we used in the course and setup your Postgres database. If you get stuck, you can always revisit the database lesson for a reminder.
-
-You must also ensure that any sensitive information is hashed with bcrypt. If any passwords are found in plain text in your application it will not pass.
+**Create all tables using db-migrate library and populate the up and down sql migrations:**
+- **Example**: `db-migrate create users-table --sql-file`
+- **Example**: up: `CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    firstName VARCHAR(100),
+    lastName VARCHAR(100),
+    password VARCHAR
+);`
+- **Example**: down: `DROP TABLE users;`
 
 ### 3. Models
 
