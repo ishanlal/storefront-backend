@@ -46,7 +46,7 @@ const addProduct = async (_req: express.Request, res: express.Response) => {
   }
 }
 
-const verifyAuthToken = (_req: express.Request, res: express.Response, next: any) => {
+const verifyAuthToken = (_req: express.Request, res: express.Response, next: Function) => {
     try {
       let authorizationHeader = '';
         authorizationHeader = (_req.headers.authorization as unknown as string);

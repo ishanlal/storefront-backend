@@ -14,7 +14,7 @@ The API needs to supply the following endpoints as well as data shapes:
 #### Users
 - An INDEX route: '/users' [GET] [token required]
 - A SHOW route: '/users/:id' [GET] [token required]
-- A CREATE route: '/users' [POST] [token required]
+- A CREATE route: '/users' [POST]
 - A DELETE route: '/users' [DELETE] [token required]
 
 #### Orders

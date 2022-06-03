@@ -4,7 +4,87 @@ import app from '../server';
 const request = supertest(app);
 let token: string;
 
-describe('Test User and Book endpoints: ', () => {
+describe('User endpoint tests: ', () => {
+  beforeEach(async()=>{
+    await createUser();
+  });
+  afterEach(async()=>{
+    const response = await request.delete('/users').send({
+      id: 1
+    }).set({
+      authorization: 'Bearer ' + token
+    });
+    expect(response.status).toBe(200);
+  });
+  it('gets the users index endpoint', async () => {
+      const response = await request.get('/users').set({
+        authorization: 'Bearer ' + token
+      });
+      expect(response.status).toBe(200);
+  });
+  it('gets the users show endpoint', async () => {
+      const response = await request.get('/users/:id').send({id: 1}).set({
+        authorization: 'Bearer ' + token
+      });
+      expect(response.status).toBe(200);
+  });
+});
+
+describe('Product endpoint tests: ', () => {
+  beforeEach(async()=>{
+    // create user
+    await createUser();
+    // create product
+    const response = await request.post('/products').send({
+      id: 1,
+      name: 'pen',
+      price: 20,
+      category: 'supplies'
+    }).set({
+      authorization: 'Bearer ' + token
+    });
+    expect(response.status).toBe(200);
+  });
+  afterEach(async()=>{
+    // delete product
+    const prodResponse = await request.delete('/products').send({
+      id: 1
+    }).set({
+      authorization: 'Bearer ' + token
+    });
+    expect(prodResponse.status).toBe(200);
+    // delete user
+    const userResponse = await request.delete('/users').send({
+      id: 1
+    }).set({
+      authorization: 'Bearer ' + token
+    });
+    expect(userResponse.status).toBe(200);
+  });
+
+  it('gets the products index endpoint', async () => {
+      const response = await request.get('/products').set({
+        authorization: 'Bearer ' + token
+      });
+      expect(response.status).toBe(200);
+  });
+  it('gets the products show endpoint', async () => {
+      const response = await request.get('/products/:id').send({id: 1}).set({
+        authorization: 'Bearer ' + token
+      });
+      expect(response.status).toBe(200);
+  });
+  it('display product category endpoint', async () => {
+    const response = await request.get('/products/:category').send({
+      category: 'supplies'
+    }).set({
+      authorization: 'Bearer ' + token
+    });
+    expect(response.status).toBe(200);
+  });
+});
+
+xdescribe('Test User and Book endpoints: ', () => {
     beforeAll(async()=>{
       await createUser();
     });
@@ -162,13 +242,11 @@ describe('Test User and Book endpoints: ', () => {
 async function createUser() {
   const response = await request.post('/users').send({
     id: 1,
-    username: 'JohnDoe',
+    username: 'johndoe',
+    firstName: 'John',
+    lastName: 'Doe',
     password_digest: 'hehe'
   });
   token = response.body;
   expect(response.status).toBe(200);
 }
-
-/*describe('Test Order and Product endpoints: ', () => {
-
-});*/

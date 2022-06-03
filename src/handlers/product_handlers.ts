@@ -21,7 +21,8 @@ const create = async (_req: express.Request, res: express.Response) => {
         const product: Product = {
             id: _req.body.id,
             name: _req.body.name,
-            price: _req.body.price
+            price: _req.body.price,
+            category: _req.body.category
         }
         const newProduct = await store.create(product);
         res.json(newProduct);
@@ -31,8 +32,17 @@ const create = async (_req: express.Request, res: express.Response) => {
     }
 }
 
-const verifyAuthToken = (_req: express.Request, res: express.Response, next: any) => {
-  console.log('UVAT called!!!');
+const destroy = async (_req: express.Request, res: express.Response) => {
+    const deleted = await store.delete(_req.body.id);
+    res.json(deleted);
+}
+
+const category = async (_req: express.Request, res: express.Response) => {
+   const product = await store.category(_req.body.category);
+   res.json(product);
+}
+
+const verifyAuthToken = (_req: express.Request, res: express.Response, next: Function) => {
     try {
       let authorizationHeader = '';
         authorizationHeader = (_req.headers.authorization as unknown as string);
@@ -47,7 +57,9 @@ const verifyAuthToken = (_req: express.Request, res: express.Response, next: any
 const product_routes = (app: express.Application) => {
   app.get('/products', index);
   app.get('/products/:id', show);
-  app.post('/products', create);
+  app.post('/products', verifyAuthToken, create);
+  app.delete('/products', verifyAuthToken, destroy);
+  app.get('/products/:category', category);
 }
 
 export default product_routes;

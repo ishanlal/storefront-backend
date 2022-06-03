@@ -11,29 +11,16 @@ describe ("User Model", () =>{
   });
   it('should have a show method', () => {
       expect(store.show).toBeDefined();
-    });
-    it('should have a create method', () => {
+  });
+  it('should have a create method', () => {
       expect(store.create).toBeDefined();
-    });
-    it('should have an authenticate method', () => {
-      expect(store.authenticate).toBeDefined();
-    });
-    it('should have a delete method', () => {
+  });
+  it('should have a delete method', () => {
       expect(store.delete).toBeDefined();
-    });
+  });
+});
 
-    /*it('create method should add a user', async function create() {
-      const result = await store.create({
-        id: 1,
-        username: 'firstUser',
-        password_digest: `haha`
-      });
-      expect(result.id).toEqual(1);
-      expect(result.username).toEqual('firstUser');
-      expect(bcrypt.compareSync('haha'+pepper, result.password_digest)).toBe(true);
-    });*/
-
-xdescribe ("Test user create and delete functions", () =>{
+describe ("Test user create and delete functions", () =>{
   beforeEach(async()=>{
     await create();
   });
@@ -44,7 +31,7 @@ xdescribe ("Test user create and delete functions", () =>{
   });
 });
 
-xdescribe ("Test Show and Index functions", () =>{
+describe ("Test Show and Index functions", () =>{
     beforeEach(async()=>{
       await create();
     });
@@ -58,19 +45,20 @@ xdescribe ("Test Show and Index functions", () =>{
     it('show method should return the correct user', async () => {
       const result = await store.show(1);
       expect(result.id).toEqual(1);
-      expect(result.username).toEqual('firstUser');
-      expect(bcrypt.compareSync('haha'+pepper, result.password_digest)).toBe(true);
+      expect(result.username).toEqual('sarahedo');
+      expect(bcrypt.compareSync('haha'+pepper, result.password)).toBe(true);
     });
-  });
   });
 
   async function create() {
     const result = await store.create({
       id: 1,
-      username: 'firstUser',
-      password_digest: `haha`
+      username: 'sarahedo',
+      firstName: 'Sarah',
+      lastName: 'Edo',
+      password: `haha`
     });
     expect(result.id).toEqual(1);
-    expect(result.username).toEqual('firstUser');
-    expect(bcrypt.compareSync('haha'+pepper, result.password_digest)).toBe(true);
+    expect(result.username).toEqual('sarahedo');
+    expect(bcrypt.compareSync('haha'+pepper, result.password)).toBe(true);
   }

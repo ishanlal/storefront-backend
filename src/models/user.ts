@@ -7,7 +7,9 @@ const pepper = process.env.BCRYPT_PASSWORD;
 export type User = {
   id: number;
   username: string;
-  password_digest: string;
+  firstName: string;
+  lastName: string;
+  password: string;
 }
 
 export class UserStore{
@@ -35,10 +37,10 @@ export class UserStore{
   }
   async create(u: User): Promise<User>{
     try{
-      const sql = 'INSERT INTO users (id, username, password_digest) VALUES ($1, $2, $3) RETURNING *';
+      const sql = 'INSERT INTO users (id, username, firstName, lastName, password) VALUES ($1, $2, $3, $4, $5) RETURNING *';
       const conn = await Client.connect();
-      const hash = bcrypt.hashSync(u.password_digest + pepper, parseInt((saltRounds as unknown as string)));
-      const result = await conn.query(sql, [u.id, u.username, hash]);
+      const hash = bcrypt.hashSync(u.password + pepper, parseInt((saltRounds as unknown as string)));
+      const result = await conn.query(sql, [u.id, u.username, u.firstName, u.lastName, hash]);
       const user = result.rows[0];
       conn.release();
       return user;
@@ -46,20 +48,7 @@ export class UserStore{
       throw new Error(`Could not add new user ${u.username}. Error: ${err}`);
     }
   }
-  async authenticate(username: string, password: string): Promise<User | null> {
-      const conn = await Client.connect();
-      const sql = 'SELECT password_digest FROM users WHERE username=($1)';
-      const result = await conn.query(sql, [username]);
-      console.log(password+pepper);
-      if(result.rows.length) {
-        const user = result.rows[0];
-        console.log(user);
-        if (bcrypt.compareSync(password+pepper, user.password_digest)) {
-          return user;
-        }
-      }
-      return null;
-    }
+
   async delete(id: number): Promise<User>{
     try{
       const sql = 'DELETE FROM users WHERE id=($1)'

@@ -42,36 +42,42 @@ xdescribe ("Order Products Model", () =>{
   const result = await Pstore.create({
     id: 1,
     name: 'pen',
-    price: 20
+    price: 20,
+    category: 'supplies'
   });
   expect(result).toEqual({
     id: 1,
     name: 'pen',
-    price: 20
+    price: 20,
+    category: 'supplies'
   });
   });
   it('create a product', async ()=>{
   const result = await Pstore.create({
     id: 2,
     name: 'pencil',
-    price: 10
+    price: 10,
+    category: 'supplies'
   });
   expect(result).toEqual({
     id: 2,
     name: 'pencil',
-    price: 10
+    price: 10,
+    category: 'supplies'
   });
   });
   it('create a product', async ()=>{
   const result = await Pstore.create({
     id: 3,
     name: 'cup',
-    price: 15
+    price: 15,
+    category: 'utensils'
   });
   expect(result).toEqual({
     id: 3,
     name: 'cup',
-    price: 15
+    price: 15,
+    category: 'utensils'
   });
   });
   // create an order
@@ -120,10 +126,12 @@ xdescribe ("Order Products Model", () =>{
 async function create() {
   const result = await Ustore.create({
     id: 1,
-    username: 'firstUser',
-    password_digest: `haha`
+    username: 'testuser',
+    firstName: 'Test',
+    lastName: 'User',
+    password: `haha`
   });
   expect(result.id).toEqual(1);
   expect(result.username).toEqual('firstUser');
-  expect(bcrypt.compareSync('haha'+pepper, result.password_digest)).toBe(true);
+  expect(bcrypt.compareSync('haha'+pepper, result.password)).toBe(true);
 }
