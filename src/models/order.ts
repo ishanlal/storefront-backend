@@ -80,4 +80,53 @@ export class OrderStore{
           throw new Error(`Could not add product ${productId} to order ${orderId}: ${err}`);
         }
       }
+      async update(o: Order): Promise<Order>{
+        try{
+          const sql = 'UPDATE orders SET status=($2) WHERE id=($1)';
+          const conn = await Client.connect();
+          o.status = o.status == 'open' ? 'closed' : 'open';
+          const result = await conn.query(sql, [o.id, o.status]);
+          const order = result.rows[0];
+          conn.release();
+          return order;
+        } catch(err){
+          throw new Error(`Could not update order ${o.id}. Error: ${err}`);
+        }
+      }
+      async delete(id: number): Promise<Order>{
+        try{
+          const sql = 'DELETE FROM orders WHERE id=($1)';
+          const conn = await Client.connect();
+          const result = await conn.query(sql, [id]);
+          const order = result.rows[0];
+          conn.release();
+          return order;
+        } catch(err){
+          throw new Error(`Could not delete order ${id}. Error: ${err}`);
+        }
+      }
+      async openOrders(id: number): Promise<string>{
+        try{
+          const sql = `SELECT COUNT (*) FROM orders WHERE status='open' AND user_id=($1)`;
+          const conn = await Client.connect();
+          const result = await conn.query(sql, [id]);
+          const order = result.rows[0].count;
+          conn.release();
+          return order;
+        } catch(err){
+          throw new Error(`Could not count open orders for userID: ${id}. Error: ${err}`);
+        }
+      }
+      async closedOrders(id: number): Promise<string>{
+        try{
+          const sql = `SELECT COUNT (*) FROM orders WHERE status='closed' AND user_id=($1)`;
+          const conn = await Client.connect();
+          const result = await conn.query(sql, [id]);
+          const order = result.rows[0].count;
+          conn.release();
+          return order;
+        } catch(err){
+          throw new Error(`Could not count closed orders for userID: ${id}. Error: ${err}`);
+        }
+      }
 }

@@ -6,7 +6,7 @@ export class DashboardQueries {
     try {
       //@ts-ignore
       const conn = await Client.connect();
-      const sql = 'SELECT name, price, order_id FROM products INNER JOIN order_products ON products.id = order_products.id';
+      const sql = 'SELECT name, price, order_id FROM products INNER JOIN order_products ON products.id = order_products.product_id';
 
       const result = await conn.query(sql);
 

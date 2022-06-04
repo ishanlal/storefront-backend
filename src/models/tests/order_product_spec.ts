@@ -9,8 +9,9 @@ const Ustore = new UserStore();
 const saltRounds = process.env.SALT_ROUNDS;
 const pepper = process.env.BCRYPT_PASSWORD;
 
-xdescribe ("Order Products Model", () =>{
+describe ("Order Product Model", () =>{
 
+  // Order Store
   it('should have an index method', ()=>{
     expect(Ostore.index).toBeDefined();
   });
@@ -20,6 +21,23 @@ xdescribe ("Order Products Model", () =>{
   it('should have a create method', () => {
       expect(Ostore.create).toBeDefined();
   });
+  it('should have a update method', () => {
+      expect(Ostore.update).toBeDefined();
+  });
+  it('should have a addProduct method', () => {
+      expect(Ostore.addProduct).toBeDefined();
+  });
+  it('should have a delete method', () => {
+      expect(Ostore.delete).toBeDefined();
+  });
+  it('should have a openOrders method', () => {
+      expect(Ostore.openOrders).toBeDefined();
+  });
+  it('should have a closedOrders method', () => {
+      expect(Ostore.closedOrders).toBeDefined();
+  });
+
+  // Product Store
   it('should have an index method', ()=>{
     expect(Pstore.index).toBeDefined();
   });
@@ -29,6 +47,15 @@ xdescribe ("Order Products Model", () =>{
   it('should have a create method', () => {
       expect(Pstore.create).toBeDefined();
   });
+  it('should have a category method', () => {
+      expect(Pstore.category).toBeDefined();
+  });
+  it('should have a delete method', () => {
+      expect(Pstore.delete).toBeDefined();
+  });
+});
+
+describe ("User, Order, Product, Dashboard Test: ", () =>{
   // create user
   beforeAll(async()=>{
     await create();
@@ -37,6 +64,7 @@ xdescribe ("Order Products Model", () =>{
   afterAll(async()=>{
     await Ustore.delete(1);
   });
+
   // create three products
   it('create a product', async ()=>{
   const result = await Pstore.create({
@@ -80,7 +108,14 @@ xdescribe ("Order Products Model", () =>{
     category: 'utensils'
   });
   });
-  // create an order
+
+  // count products by category
+  it('count products by category', async ()=>{
+  const result = await Pstore.category('supplies');
+  expect(result).toEqual('2');
+  });
+
+  // create first order
   it('create an order', async ()=>{
   const result = await Ostore.create({
     id: 1,
@@ -93,7 +128,8 @@ xdescribe ("Order Products Model", () =>{
     user_id: '1'
   });
   });
-  // add products to open order
+
+  // add products to first order
   it('add products to order', async ()=>{
   const result = await Ostore.addProduct(1, '1', '1');
   expect(result).toEqual({
@@ -122,7 +158,74 @@ xdescribe ("Order Products Model", () =>{
   });
   });
 
+  // update order status
+  it('update order status', async ()=>{
+  const result = await Ostore.update({
+    id: 1,
+    status: 'open',
+    user_id: '1'
+  });
+  });
+
+  // create second order
+  it('create an order', async ()=>{
+  const result = await Ostore.create({
+    id: 2,
+    status: 'open',
+    user_id: '1'
+  });
+  expect(result).toEqual({
+    id: 2,
+    status: 'open',
+    user_id: '1'
+  });
+  });
+
+  // add a product to second order
+  it('add products to order', async ()=>{
+  const result = await Ostore.addProduct(1, '2', '1');
+  expect(result).toEqual({
+    id: 4,
+    quantity: 1,
+    order_id: '2',
+    product_id: '1'
+  });
+  });
+
+  // display open orders of userID
+  it('display open orders of userID', async ()=>{
+  const result = await Ostore.openOrders(1);
+  expect(result).toEqual('1');
+  });
+
+  // display closed orders of userID
+  it('display closed orders of userID', async ()=>{
+  const result = await Ostore.closedOrders(1);
+  expect(result).toEqual('1');
+  });
+
+  // delete orders
+  it('delete order', async ()=>{
+  const result = await Ostore.delete(1);
+  });
+  it('delete order', async ()=>{
+  const result = await Ostore.delete(2);
+  });
+
+  // delete products
+  it('delete product', async ()=>{
+  const result = await Pstore.delete(1);
+  });
+  it('delete product', async ()=>{
+  const result = await Pstore.delete(2);
+  });
+  it('delete product', async ()=>{
+  const result = await Pstore.delete(3);
+  });
+  // end
 });
+
+// create user method
 async function create() {
   const result = await Ustore.create({
     id: 1,
@@ -132,6 +235,6 @@ async function create() {
     password: `haha`
   });
   expect(result.id).toEqual(1);
-  expect(result.username).toEqual('firstUser');
+  expect(result.username).toEqual('testuser');
   expect(bcrypt.compareSync('haha'+pepper, result.password)).toBe(true);
 }

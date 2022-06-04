@@ -9,7 +9,7 @@ The API needs to supply the following endpoints as well as data shapes:
 - A SHOW route: 'products/:id' [GET]
 - A CREATE route: 'products' [POST] [token required]
 - A DELETE route: '/products' [DELETE] [token required]
-- A DISPLAY route: 'products/:category' [GET]
+- A READ ONLY route: 'products/:category' [GET]
 
 #### Users
 - An INDEX route: '/users' [GET] [token required]
@@ -23,13 +23,14 @@ The API needs to supply the following endpoints as well as data shapes:
 - A CREATE route: '/orders' [POST] [token required]
 - A DELETE route: '/orders' [DELETE] [token required]
 - An ADD PRODUCT route: '/orders/:id/products' [POST] [token required]
-- A DISPLAY route: '/open-orders-by-user/:id' [GET] [token required]
-- A DISPLAY route: '/closed-orders-by-user/:id' [GET] [token required]
+- An UPDATE route: '/orders/:id' [POST] [token required]
+- A READ ONLY route: '/open-orders-by-user/:id' [GET] [token required]
+- A READ ONLY route: '/closed-orders-by-user/:id' [GET] [token required]
 
 #### Dashboard
-- A DISPLAY route: '/five-most-expensive' [GET]
-- A DISPLAY route: '/products_in_orders' [GET]
-- A DISPLAY route: '/users-with-orders' [GET]
+- A READ ONLY route: '/five-most-expensive' [GET]
+- A READ ONLY route: '/products_in_orders' [GET]
+- A READ ONLY route: '/users-with-orders' [GET]
 
 ## Data Shapes
 #### Products
