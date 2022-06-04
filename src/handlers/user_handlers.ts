@@ -7,13 +7,23 @@ const store = new UserStore();
 const secret = process.env.TOKEN_SECRET;
 
 const index = async (_req: express.Request, res: express.Response) => {
+  try{
   const users = await store.index();
   res.json(users);
+} catch(err) {
+    res.status(400);
+    res.json(err);
+}
 }
 
 const show = async (_req: express.Request, res: express.Response) => {
+  try{
    const user = await store.show(_req.body.id);
    res.json(user);
+ } catch(err) {
+     res.status(400);
+     res.json(err);
+ }
 }
 
 const create = async (_req: express.Request, res: express.Response) => {
@@ -35,8 +45,13 @@ const create = async (_req: express.Request, res: express.Response) => {
 }
 
 const destroy = async (_req: express.Request, res: express.Response) => {
+  try{
     const deleted = await store.delete(_req.body.id);
     res.json(deleted);
+  } catch(err) {
+      res.status(400);
+      res.json(err);
+  }
 }
 
 const verifyAuthToken = (_req: express.Request, res: express.Response, next: Function) => {

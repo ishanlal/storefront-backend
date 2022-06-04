@@ -7,13 +7,23 @@ const store = new ProductStore();
 const secret = process.env.TOKEN_SECRET;
 
 const index = async (_req: express.Request, res: express.Response) => {
+  try{
   const products = await store.index();
   res.json(products);
+} catch(err) {
+    res.status(400);
+    res.json(err);
+}
 }
 
 const show = async (_req: express.Request, res: express.Response) => {
+  try{
    const product = await store.show(_req.body.id);
    res.json(product);
+ } catch(err) {
+     res.status(400);
+     res.json(err);
+ }
 }
 
 const create = async (_req: express.Request, res: express.Response) => {
@@ -33,13 +43,23 @@ const create = async (_req: express.Request, res: express.Response) => {
 }
 
 const destroy = async (_req: express.Request, res: express.Response) => {
+  try{
     const deleted = await store.delete(_req.body.id);
     res.json(deleted);
+  } catch(err) {
+        res.status(400);
+        res.json(err);
+    }
 }
 
 const category = async (_req: express.Request, res: express.Response) => {
+  try{
    const product = await store.category(_req.body.category);
    res.json(product);
+ } catch(err) {
+     res.status(400);
+     res.json(err);
+ }
 }
 
 const verifyAuthToken = (_req: express.Request, res: express.Response, next: Function) => {
